@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: todos
+    ports:
+      - "5432:5432"
+#    Uncomment the lines below to perssit databse on volume
+#    volumes:
+#      - db-data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PGUSER: postgres
+      PGHOST: db
+      PGDATABASE: todos
+      PGPASSWORD: mysecretpassword
+      PGPORT: 5432
+    depends_on:
+      - db
+    restart: always
+
+#volumes:
+#  db-data:
